@@ -31,7 +31,7 @@ open class TagListView: UIView {
             }
         }
     }
-
+    
     @IBInspectable open dynamic var tagLineBreakMode: NSLineBreakMode = .byTruncatingMiddle {
         didSet {
             tagViews.forEach {
@@ -121,7 +121,7 @@ open class TagListView: UIView {
             rearrangeViews()
         }
     }
-
+    
     @IBInspectable open dynamic var minWidth: CGFloat = 0 {
         didSet {
             rearrangeViews()
@@ -238,7 +238,7 @@ open class TagListView: UIView {
             $0.removeFromSuperview()
         }
         rowViews.removeAll(keepingCapacity: true)
-
+        
         var isRtl: Bool = false
         
         if #available(iOS 10.0, tvOS 10.0, *) {
@@ -284,7 +284,7 @@ open class TagListView: UIView {
                 
                 rowViews.append(currentRowView)
                 addSubview(currentRowView)
-
+                
                 tagView.frame.size.width = min(tagView.frame.size.width, frameWidth)
             }
             
@@ -334,7 +334,7 @@ open class TagListView: UIView {
         return CGSize(width: frame.width, height: height)
     }
     
-    private func createNewTagView(_ title: String) -> TagView {
+    private func createNewTagView(_ title: String, _ backgroundColor: UIColor?) -> TagView {
         let tagView = TagView(title: title)
         
         tagView.textColor = textColor
@@ -356,7 +356,7 @@ open class TagListView: UIView {
         tagView.removeIconLineColor = removeIconLineColor
         tagView.addTarget(self, action: #selector(tagPressed(_:)), for: .touchUpInside)
         tagView.removeButton.addTarget(self, action: #selector(removeButtonPressed(_:)), for: .touchUpInside)
-        
+        tagView.tagBackgroundColor = backgroundColor ?? tagBackgroundColor
         // On long press, deselect all tags except this one
         tagView.onLongPress = { [unowned self] this in
             self.tagViews.forEach {
@@ -366,16 +366,21 @@ open class TagListView: UIView {
         
         return tagView
     }
-
+    
     @discardableResult
-    open func addTag(_ title: String) -> TagView {
+    open func addTag(_ title: String, _ backgroundColor: UIColor? = nil) -> TagView {
         defer { rearrangeViews() }
-        return addTagView(createNewTagView(title))
+        return addTagView(createNewTagView(title, backgroundColor))
     }
     
     @discardableResult
     open func addTags(_ titles: [String]) -> [TagView] {
-        return addTagViews(titles.map(createNewTagView))
+        return addTagViews(titles.map({createNewTagView($0, nil)}))
+    }
+    
+    @discardableResult
+    open func addTags(titleWithColors: [String : UIColor]) -> [TagView] {
+        return addTagViews(titleWithColors.map{createNewTagView($0, $1)})
     }
     
     @discardableResult
@@ -396,13 +401,13 @@ open class TagListView: UIView {
         }
         return tagViews
     }
-
+    
     @discardableResult
-    open func insertTag(_ title: String, at index: Int) -> TagView {
-        return insertTagView(createNewTagView(title), at: index)
+    open func insertTag(_ title: String, at index: Int, with backgroundColor: UIColor? = nil) -> TagView {
+        return insertTagView(createNewTagView(title, backgroundColor), at: index)
     }
     
-
+    
     @discardableResult
     open func insertTagView(_ tagView: TagView, at index: Int) -> TagView {
         defer { rearrangeViews() }
@@ -440,7 +445,7 @@ open class TagListView: UIView {
         let views: [UIView] = tagViews + tagBackgroundViews
         views.forEach { $0.removeFromSuperview() }
     }
-
+    
     open func selectedTags() -> [TagView] {
         return tagViews.filter { $0.isSelected }
     }
