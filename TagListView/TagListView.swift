@@ -334,10 +334,10 @@ open class TagListView: UIView {
         return CGSize(width: frame.width, height: height)
     }
     
-    private func createNewTagView(_ title: String, _ backgroundColor: UIColor?) -> TagView {
+    private func createNewTagView(_ title: String, _ backgroundColor: UIColor? = nil, _ textColor: UIColor? = nil) -> TagView {
         let tagView = TagView(title: title)
         
-        tagView.textColor = textColor
+        tagView.textColor = textColor ?? self.textColor
         tagView.selectedTextColor = selectedTextColor
         tagView.tagBackgroundColor = tagBackgroundColor
         tagView.highlightedBackgroundColor = tagHighlightedBackgroundColor
@@ -368,21 +368,21 @@ open class TagListView: UIView {
     }
     
     @discardableResult
-    open func addTag(_ title: String, _ backgroundColor: UIColor? = nil) -> TagView {
+    open func addTag(_ title: String, _ backgroundColor: UIColor? = nil, _ textColor: UIColor? = nil) -> TagView {
         defer { rearrangeViews() }
-        return addTagView(createNewTagView(title, backgroundColor))
+        return addTagView(createNewTagView(title, backgroundColor, textColor))
     }
     
     @discardableResult
     open func addTags(_ titles: [String]) -> [TagView] {
-        return addTagViews(titles.map({createNewTagView($0, nil)}))
+        return addTagViews(titles.map({createNewTagView($0, nil, nil)}))
     }
-    
-    @discardableResult
-    open func addTags(titleWithColors: [String : UIColor]) -> [TagView] {
-        return addTagViews(titleWithColors.map{createNewTagView($0, $1)})
-    }
-    
+//
+//    @discardableResult
+//    open func addTags(titleWithColors: [String : UIColor]) -> [TagView] {
+//        return addTagViews(titleWithColors.map{createNewTagView($0, $1)})
+//    }
+//
     @discardableResult
     open func addTagView(_ tagView: TagView) -> TagView {
         defer { rearrangeViews() }
@@ -403,8 +403,11 @@ open class TagListView: UIView {
     }
     
     @discardableResult
-    open func insertTag(_ title: String, at index: Int, with backgroundColor: UIColor? = nil) -> TagView {
-        return insertTagView(createNewTagView(title, backgroundColor), at: index)
+    open func insertTag(_ title: String,
+                        at index: Int,
+                        _ backgroundColor: UIColor? = nil,
+                        _ textColor: UIColor? = nil) -> TagView {
+        return insertTagView(createNewTagView(title, backgroundColor, textColor), at: index)
     }
     
     
