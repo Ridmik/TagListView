@@ -50,10 +50,30 @@ class ViewController: UIViewController, TagListViewDelegate {
         biggestTagListView.delegate = self
         biggestTagListView.textFont = .systemFont(ofSize: 24)
         // it is also possible to add all tags in one go
-        biggestTagListView.addTags(["all", "your", "tag", "are", "belong", "to", "us"])
+        biggestTagListView.addTags(test())
         biggestTagListView.minWidth = 57
         biggestTagListView.alignment = .right
         
+    }
+    
+    func test() -> [NSAttributedString] {
+        return ["all", "your", "tag", "are", "belong", "to", "us"].map { createDummyAttributedString($0) }
+    }
+    
+    func createDummyAttributedString(_ str: String) -> NSAttributedString {
+        let attrString = NSMutableAttributedString()
+        attrString.append(
+            NSAttributedString(string: str, attributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.white
+            ])
+        )
+        
+        attrString.append(
+            NSAttributedString(string: "1", attributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.red
+            ])
+        )
+        return attrString
     }
     
     override func didReceiveMemoryWarning() {
