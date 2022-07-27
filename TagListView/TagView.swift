@@ -160,6 +160,7 @@ open class TagView: UIButton {
     open var onTap: ((TagView) -> Void)?
     open var onLongPress: ((TagView) -> Void)?
     var attributedText: NSAttributedString?
+    var index: Int = 0
     
     // MARK: - init
     

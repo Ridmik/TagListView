@@ -83,7 +83,7 @@ class ViewController: UIViewController, TagListViewDelegate {
 
     // MARK: TagListViewDelegate
     func tagPressed(_ title: String, tagView: TagView, sender: TagListView) {
-        print("Tag pressed: \(title), \(sender)")
+        print("Tag pressed: \(title), \(sender), \(tagView.index)")
         tagView.isSelected = !tagView.isSelected
     }
     

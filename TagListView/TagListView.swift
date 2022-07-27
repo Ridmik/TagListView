@@ -369,7 +369,39 @@ open class TagListView: UIView {
     
     private func createNewTagView(_ attributedTitle: NSAttributedString) -> TagView {
         let tagView = TagView(attributedTitle: attributedTitle)
+        tagView.textColor = textColor
+        tagView.selectedTextColor = selectedTextColor
+        tagView.tagBackgroundColor = tagBackgroundColor
+        tagView.highlightedBackgroundColor = tagHighlightedBackgroundColor
+        tagView.selectedBackgroundColor = tagSelectedBackgroundColor
+        tagView.titleLineBreakMode = tagLineBreakMode
+        tagView.cornerRadius = cornerRadius
+        tagView.borderWidth = borderWidth
+        tagView.borderColor = borderColor
+        tagView.selectedBorderColor = selectedBorderColor
+        tagView.paddingX = paddingX
+        tagView.paddingY = paddingY
+        tagView.textFont = textFont
+        tagView.removeIconLineWidth = removeIconLineWidth
+        tagView.removeButtonIconSize = removeButtonIconSize
+        tagView.enableRemoveButton = enableRemoveButton
+        tagView.removeIconLineColor = removeIconLineColor
+        tagView.addTarget(self, action: #selector(tagPressed(_:)), for: .touchUpInside)
+        tagView.removeButton.addTarget(self, action: #selector(removeButtonPressed(_:)), for: .touchUpInside)
         
+        // On long press, deselect all tags except this one
+        tagView.onLongPress = { [unowned self] this in
+            self.tagViews.forEach {
+                $0.isSelected = $0 == this
+            }
+        }
+        
+        return tagView
+    }
+    
+    private func createNewTagViewWithIndex(_ attributedTitle: NSAttributedString, _ index: Int) -> TagView {
+        let tagView = TagView(attributedTitle: attributedTitle)
+        tagView.index = index
         tagView.textColor = textColor
         tagView.selectedTextColor = selectedTextColor
         tagView.tagBackgroundColor = tagBackgroundColor
@@ -413,7 +445,9 @@ open class TagListView: UIView {
     
     @discardableResult
     open func addTags(_ titles: [NSAttributedString]) -> [TagView] {
-        return addTagViews(titles.map(createNewTagView))
+        return addTagViews(titles.enumerated().map { (index, attrString) in
+            return createNewTagViewWithIndex(attrString, index)
+        })
     }
     
     @discardableResult
