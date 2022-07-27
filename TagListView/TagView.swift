@@ -99,11 +99,19 @@ open class TagView: UIButton {
             backgroundColor = selectedBackgroundColor ?? tagBackgroundColor
             layer.borderColor = selectedBorderColor?.cgColor ?? borderColor?.cgColor
             setTitleColor(selectedTextColor, for: UIControl.State())
+            if let attributedText = attributedText {
+                setAttributedTitle(NSAttributedString(string: attributedText.string, attributes: [
+                    NSAttributedString.Key.foregroundColor: UIColor.white
+                ]), for: UIControl.State())
+            }
         }
         else {
             backgroundColor = tagBackgroundColor
             layer.borderColor = borderColor?.cgColor
             setTitleColor(textColor, for: UIControl.State())
+            if let attributedText = attributedText {
+                setAttributedTitle(attributedText, for: UIControl.State())
+            }
         }
     }
     
@@ -151,6 +159,7 @@ open class TagView: UIButton {
     /// Handles Tap (TouchUpInside)
     open var onTap: ((TagView) -> Void)?
     open var onLongPress: ((TagView) -> Void)?
+    var attributedText: NSAttributedString?
     
     // MARK: - init
     
@@ -170,7 +179,7 @@ open class TagView: UIButton {
     public init(attributedTitle: NSAttributedString) {
         super.init(frame: CGRect.zero)
         setAttributedTitle(attributedTitle, for: UIControl.State())
-        
+        attributedText = attributedTitle
         setupView()
     }
     
