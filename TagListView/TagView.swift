@@ -161,7 +161,12 @@ open class TagView: UIButton {
     open var onLongPress: ((TagView) -> Void)?
     var attributedText: NSAttributedString?
     var index: Int = 0
-    
+    lazy var backgroundView: UIView = {
+      let view = UIView()
+        view.layer.cornerRadius = 4
+        view.backgroundColor = .systemBlue
+        return view
+    }()
     // MARK: - init
     
     required public init?(coder aDecoder: NSCoder) {
@@ -190,6 +195,8 @@ open class TagView: UIButton {
         frame.size = intrinsicContentSize
         addSubview(removeButton)
         removeButton.tagView = self
+        
+        insertSubview(backgroundView, at: 0)
         
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.longPress))
         self.addGestureRecognizer(longPress)
@@ -231,6 +238,31 @@ open class TagView: UIButton {
             removeButton.frame.size.height = self.frame.height
             removeButton.frame.origin.y = 0
         }
+        if attributedText != nil {
+            attributedText!.enumerateAttribute(NSAttributedString.Key.backgroundColor, in: NSRange(0..<attributedText!.length), options: .longestEffectiveRangeNotRequired) {
+                value, range, stop in
+                if let color = value as? UIColor {
+                    print(color)
+                    print(range)
+                    let newText = attributedText!.string.prefix(range.upperBound)
+                    print(newText)
+                    let newSize = labelSize(for: NSAttributedString(string: String(newText), attributes: [
+                        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)
+                    ]), considering: UIScreen.main.bounds.width - 32)
+                    print(newSize)
+                    backgroundView.frame = CGRect(x: paddingX - 2, y: 2, width: newSize.width + 4, height: frame.height - 4)
+                }
+            }
+        }
+
+        
+    }
+    
+    func labelSize(for attributedText: NSAttributedString, considering maxWidth: CGFloat) -> CGSize {
+        let constraintBox = CGSize(width: maxWidth, height: .greatestFiniteMagnitude)
+        let rect = attributedText.boundingRect(with: constraintBox,
+                                               options: [.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil).integral
+        return rect.size
     }
 }
 

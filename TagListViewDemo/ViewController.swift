@@ -48,13 +48,38 @@ class ViewController: UIViewController, TagListViewDelegate {
         biggerTagListView.alignment = .center
         
         biggestTagListView.delegate = self
-        biggestTagListView.textFont = .systemFont(ofSize: 24)
+        biggestTagListView.textFont = .systemFont(ofSize: 14)
         // it is also possible to add all tags in one go
-        biggestTagListView.addTags(test())
+        biggestTagListView.addTags(generateDummyTags())
         biggestTagListView.minWidth = 57
         biggestTagListView.alignment = .right
         
     }
+    
+    func generateDummyTags() -> [NSAttributedString] {
+        let tag1 = NSMutableAttributedString()
+        tag1.append(
+            NSAttributedString(
+                string: "#1 Best Sellar",
+                attributes: [
+                    NSAttributedString.Key.backgroundColor : UIColor.clear,
+                    NSAttributedString.Key.foregroundColor: UIColor.black,
+                ]
+            )
+        )
+        
+        tag1.append(
+            NSAttributedString(
+                string: "  Economic",
+                attributes: [
+                    NSAttributedString.Key.foregroundColor: UIColor.black
+                ]
+            )
+        )
+        
+        return [tag1]
+    }
+
     
     func test() -> [NSAttributedString] {
         return ["all", "your", "tag", "are", "belong", "to", "us"].map { createDummyAttributedString($0) }
