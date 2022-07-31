@@ -160,11 +160,11 @@ open class TagView: UIButton {
     open var onTap: ((TagView) -> Void)?
     open var onLongPress: ((TagView) -> Void)?
     var attributedText: NSAttributedString?
-    var index: Int = 0
+    open var index: Int = 0
     lazy var backgroundView: UIView = {
       let view = UIView()
         view.layer.cornerRadius = 4
-        view.backgroundColor = .systemBlue
+        view.backgroundColor = UIColor(red: 1, green: 229/255, blue: 136/255, alpha: 1)
         return view
     }()
     // MARK: - init
